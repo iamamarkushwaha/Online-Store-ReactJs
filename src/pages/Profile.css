@@ -1,0 +1,30 @@
+/* src/components/Profile.css */
+
+.profile-section {
+  padding: 20px;
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  max-width: 400px;
+  margin: 40px auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-heading {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.profile-info {
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+}
+
+.no-user {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  margin-top: 50px;
+}

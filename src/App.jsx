@@ -1,26 +1,33 @@
-import React, { useEffect, useState } from 'react';
+// src/App.jsx
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Login from './components/Login';
+import ProductList from './components/ProductList';
+import ProductDetails from './components/ProductDetails';
+import Cart from './pages/Cart';
+import Profile from './pages/Profile';
+import Orders from './pages/Orders';
 import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginData, setLoginData] = useState({ username: '', password: '' })
-
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      fetch('https://fakestoreapi.com/products')
-        .then(res => res.json())
-        .then(data => setProducts(data))
-    }
-  }, [isLoggedIn]);
+    fetch('https://fakestoreapi.com/products')
+      .then(res => res.json())
+      .then(data => setProducts(data));
+  }, []);
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (loginData.username && loginData.password) {
-      setIsLoggedIn(true); 
+      setIsLoggedIn(true);
     } else {
       alert('Please enter both username and password.');
     }
@@ -31,107 +38,28 @@ function App() {
   };
 
   const handleRemoveFromCart = (productId) => {
-    const updatedCart = cartItems.filter(item => item.id !== productId);
-    setCartItems(updatedCart);
-  };
-
-  const handleShowDetails = (product) => {
-    setSelectedProduct(product);
+    setCartItems(cartItems.filter(item => item.id !== productId));
   };
 
   if (!isLoggedIn) {
-    return (
-      <div className="login-page">
-        <h2>Login to MyStore</h2>
-        <form onSubmit={handleLoginSubmit} className="login-form">
-          <input
-            type="text"
-            placeholder="Username"
-            value={loginData.username}
-            onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={loginData.password}
-            onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-            required
-          />
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    )
+    return <Login loginData={loginData} setLoginData={setLoginData} onSubmit={handleLoginSubmit} />;
   }
 
   return (
-    <div className="container">
-      <nav className="navbar">
-        <div className="logo"><b>CartAttack</b></div>
-        <div className="navbar-right">
-          <a href="home">Home</a>
-          <a href="orders">Orders</a>
-          <a href="address">Address</a>
-          <a href="country">Country</a>
-        </div>
-      </nav>
-
-      <h1> Welcome to Cart Attack</h1>
-
-      <section>
-        <h2> Products</h2>
-        {products.length === 0 && <p>Loading products...</p>}
-
-        <div className="product-list">
-          {products.map(product => (
-            <div key={product.id} className="product-card">
-              <img src={product.image} alt={product.title} />
-              <h4>{product.title.slice(0, 30)}...</h4>
-              <p><strong>${product.price.toFixed(2)}</strong></p>
-
-              <button onClick={() => handleShowDetails(product)}><b>Details</b></button>
-              <button onClick={() => handleAddToCart(product)}><b>Add to Cart</b></button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <hr />
-
-      <section>
-        <h2>Product Details</h2>
-        {selectedProduct ? (
-          <div className="product-details">
-            <img src={selectedProduct.image} alt={selectedProduct.title} style={{ width: '100%', height: '300px', objectFit: 'contain' }} />
-            <h3>{selectedProduct.title}</h3>
-            <p><strong>Price:</strong> ${selectedProduct.price.toFixed(2)}</p>
-            <p><strong>Category:</strong> {selectedProduct.category}</p>
-            <p>{selectedProduct.description}</p>
-          </div>
-        ) : (
-          <p>Select a product to see its details.</p>
-        )}
-      </section>
-
-      <hr />
-
-      <section>
-        <h2>Cart ({cartItems.length} items)</h2>
-        {cartItems.length === 0 ? (
-          <p>Your cart is empty.</p>
-        ) : (
-          <ul>
-            {cartItems.map(item => (
-              <li key={item.id} className="cart-item">
-                {item.title.slice(0, 40)} - ${item.price.toFixed(2)}
-                <button className="remove-button" onClick={() => handleRemoveFromCart(item.id)}><b>Remove</b></button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
-    </div>
-  )
+    
+      <div className="App">
+        
+        <Navbar cartCount={cartItems.length} />
+          <Routes>
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/Profile" element={<Profile />} />
+          <Route path="/" element={<ProductList products={products} onAddToCart={handleAddToCart} onViewDetails={setSelectedProduct} />} />
+          <Route path="/details" element={<ProductDetails product={selectedProduct} />} />
+          <Route path="/cart" element={<Cart cartItems={cartItems} onRemove={handleRemoveFromCart} />} />
+        </Routes>
+      </div>
+    
+  );
 }
 
 export default App;

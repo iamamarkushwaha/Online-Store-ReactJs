@@ -1,0 +1,34 @@
+button {
+  background-color: #ff4081;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  transition: 0.3s ease;
+  border-radius: 6px;
+  margin: 5px;
+}
+
+
+button:hover {
+    background-color: #e73370;
+    transform: scale(1.05);
+}
+
+.cart-list{
+  list-style: none;     
+  padding: 0;
+  max-width: 600px;        
+  margin: 0 auto;
+ 
+    
+}
+
+.cart-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #f7f7f7; 
+  border-radius: 8px;
+}

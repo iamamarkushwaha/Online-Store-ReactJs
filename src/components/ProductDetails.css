@@ -1,0 +1,10 @@
+/* src/components/ProductDetails.css */
+.details-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
